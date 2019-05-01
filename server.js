@@ -24,9 +24,17 @@ app.get("/api/:dat", function (req, res) {
     const request_string = req.params.dat;
     var is_natural = /^\w{3,7} ?\d{1,2}(, | |,)(\d{2}|\d{4})$/i.test(request_string);
     var is_unix = /^\d{10}$/.test(request_string);
+    
+    if ((!is_natural && !is_unix) || request_string.length === 0) {
+        res.writeHead(422, {'Content-type': 'text/plain'});
+        res.end("Unrecognized natural language or unix time format");
+    }
+  
     res.writeHead(200, {'Content-type': 'text/plain'});
+    const return_object = {};
     if (is_natural) {
-        res.end(parseJSON(path, undefined));
+        return_object.natural = request_string;
+        return_object.unix = getUnix(request_string);
     }
     if (is_unix) {
         res.end(parseJSON(undefined, path));
@@ -40,9 +48,6 @@ var server = http.createServer(function(req, res) {
     var is_natural = /^\w{3,7} ?\d{1,2}(, | |,)(\d{2}|\d{4})$/i.test(path);
     var is_unix = /^\d{10}$/.test(path);
 
-    if (is_natural === true && is_unix === true) {
-        throw new RegexError("Both expressions match. Path: " + path);
-    }
     if ((!is_natural && !is_unix) || path.length === 0) {
         res.writeHead(422, {'Content-type': 'text/plain'});
         res.end("Unrecognized natural language or unix time format");
@@ -50,7 +55,7 @@ var server = http.createServer(function(req, res) {
 
     res.writeHead(200, {'Content-type': 'text/plain'});
     if (is_natural) {
-        res.end(parseJSON(path, undefined));
+        const natural =  
     }
     if (is_unix) {
         res.end(parseJSON(undefined, path));
@@ -68,7 +73,7 @@ function parseJSON(natural, unix) {
     return JSON.stringify({'unix': unix, 'natural': natural});
 }
 
-function parseUnix (natural) {
+function getUnix (natural) {
     var date = new Date(natural);
     return date.getTime() / 1000;
 }
