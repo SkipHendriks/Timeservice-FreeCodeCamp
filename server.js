@@ -20,12 +20,18 @@ app.get("/", function (req, res) {
 
 
 // your first API endpoint... 
-app.get("/api/:", function (req, res) {
-  res.json({greeting: 'hello API'});
+app.get("/api/:dat", function (req, res) {
+    const request_string = req.params.dat;
+    var is_natural = /^\w{3,7} ?\d{1,2}(, | |,)(\d{2}|\d{4})$/i.test(request_string);
+    var is_unix = /^\d{10}$/.test(request_string);
+    res.writeHead(200, {'Content-type': 'text/plain'});
+    if (is_natural) {
+        res.end(parseJSON(path, undefined));
+    }
+    if (is_unix) {
+        res.end(parseJSON(undefined, path));
+    }
 });
-
-
-var http = require('http');
 
 var server = http.createServer(function(req, res) {
     var path = require('url').parse(req.url).path;
