@@ -18,17 +18,18 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-// your first API endpoint... 
-app.get("/api/timestamp/\d{10}/", function (req, res) {
-    console.log('in there');
-    respond(new Date(req.params[1]*1000), res);
+// timestamp endpoint
+app.get('/api/timestamp/:timestamp(\\d{10})/', function (req, res) {
+    respond(new Date(req.params.timestamp*1000), res);
 });
 
-app.get("/api/timestamp/:dat", function (req, res) {
+// natural endpoint
+app.get("/api/timestamp/:dat/", function (req, res) {
   console.log('in here');
     respond(new Date(req.params.dat), res);
 });
 
+// current date endpoint
 app.get("/api/timestamp/", function (req, res) {
     console.log('hoe dan');
     respond(new Date(), res);
