@@ -20,28 +20,25 @@ app.get("/", function (req, res) {
 
 // your first API endpoint... 
 app.get("/api/timestamp//^(\d{10})$/", function (req, res) {
-    const date = new Date(req.params[1]);
-    let res_object = {
-        natural: date.toUTCString(),
-        unix: date.getTime() / 1000
-    };
-    res.writeHead(200, {'Content-type': 'text/plain'});
-    res.end(JSON.stringify(res_object));
+    console.log('in there');
+    respond(new Date(req.params[1]*1000), res);
+});
+
+app.get("/api/timestamp/:dat", function (req, res) {
+    respond(new Date(req.params.dat), res);
 });
 
 app.get("/api/timestamp/", function (req, res) {
+    respond(new Date(), res);
+});
 
-    const date = new Date(req.params.dat)
+function respond (date, res) {
     let res_object = {
         natural: date.toUTCString(),
-        unix: date.getTime() / 1000
+        unix: date.getTime()
     };
     res.writeHead(200, {'Content-type': 'text/plain'});
     res.end(JSON.stringify(res_object));
-});
-
-function buildResponseObject (date_string) {
-    
 }
 
 // listen for requests :)
