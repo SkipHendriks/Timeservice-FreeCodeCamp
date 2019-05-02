@@ -25,13 +25,11 @@ app.get('/api/timestamp/:timestamp(\\d{10})/', function (req, res) {
 
 // natural endpoint
 app.get("/api/timestamp/:dat/", function (req, res) {
-  console.log('in here');
     respond(new Date(req.params.dat), res);
 });
 
 // current date endpoint
 app.get("/api/timestamp/", function (req, res) {
-    console.log('hoe dan');
     respond(new Date(), res);
 });
 
